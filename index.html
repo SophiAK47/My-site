@@ -1,295 +1,49 @@
 <link rel="stylesheet" href="style.css">
-:root {
-  --bg-color: #2c3e50;
-  --table-color: #8e44ad;
-  --shell-color: #783e19;
-  --shell-dark: #4a2306;
-  --shell-light: #96552a;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walnut Shell Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+  <div class="game-container">
+    
+    <svg class="rubric-svg-visual" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="none">
+      <opacity-mask>
+        <linearGradient id="svg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#9b59b6;stop-opacity:0.1" />
+          <stop offset="100%" style="stop-color:#34495e;stop-opacity:0.15" />
+        </linearGradient>
+      </opacity-mask>
+      <rect width="100%" height="100%" fill="url(#svg-grad)" />
+      <circle cx="400" cy="300" r="250" stroke="rgba(255,255,255,0.05)" stroke-width="2" fill="none" />
+      <circle cx="400" cy="300" r="350" stroke="rgba(255,255,255,0.03)" stroke-width="1" fill="none" />
+    </svg>
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  overflow: hidden;
-  color: white;
-}
+    <div class="ui-panel">
+      <div class="score-board">Round: <span id="round-val">1</span>/10</div>
+      <div id="game-message">Press the button to begin!</div>
+    </div>
 
-/* 1. Integrated your scenic photo backdrop while keeping your original color style layout intact */
-.game-container {
-  position: relative;
-  width: 100%;
-  max-width: 800px;
-  height: 600px;
-  /* Layers your original linear gradient over your custom background image file */
-  background: linear-gradient(to bottom, rgba(52, 73, 94, 0.8), rgba(44, 62, 80, 0.85)), url('IMG_0130.webp') no-repeat center center;
-  background-size: cover;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-}
+    <div class="background-chair"></div>
+    
+    <div class="table-surface">
+      <div id="game-board" class="game-board">
+        </div>
+    </div>
 
-/* High-quality SVG positioning layer */
-.rubric-svg-visual {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
+    <button id="start-btn">Start Round</button>
 
-/* Stylized physical background chair structure */
-.background-chair {
-  position: absolute;
-  bottom: 120px;
-  left: 12%; 
-  width: 90px;
-  height: 170px;
-  background: #3a1e0b;
-  border-radius: 12px 12px 0 0;
-  pointer-events: none;
-  z-index: 1; 
-  box-shadow: -8px 15px 25px rgba(0, 0, 0, 0.6);
-}
-.background-chair::before {
-  content: '';
-  position: absolute;
-  bottom: 50px;
-  left: -5px;
-  width: 100px;
-  height: 20px;
-  background: #7d1c1c;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-}
+    <div id="feedback-popup" class="feedback-popup">
+      <div id="feedback-emoji">🎉</div>
+      <div id="feedback-text">Correct!</div>
+    </div>
+  </div>
 
-.ui-panel {
-  z-index: 10;
-  text-align: center;
-  width: 100%;
-}
-
-.score-board {
-  font-size: 1.5rem;
-  font-weight: bold;
-  background: rgba(0,0,0,0.65);
-  padding: 5px 15px;
-  border-radius: 20px;
-  display: inline-block;
-  margin-bottom: 10px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-#game-message {
-  font-size: 1.2rem;
-  text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
-  height: 30px;
-  font-weight: 600;
-}
-
-/* Purple gaming table surface */
-.table-surface {
-  position: relative;
-  width: 90%;
-  height: 250px;
-  background: radial-gradient(ellipse at center, #9b59b6 0%, #732d91 100%);
-  border-radius: 50% / 20%;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-}
-
-.game-board {
-  position: relative;
-  width: 85%;
-  height: 100px;
-}
-
-/* Detailed Walnut Shell Styling */
-.shell-wrapper {
-  position: absolute;
-  bottom: 10px;
-  width: 70px;
-  height: 70px;
-  transition: transform 0.3s ease, left 0s ease;
-  cursor: pointer;
-  z-index: 4;
-}
-
-.walnut-shell {
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 35% 25%, var(--shell-light) 0%, var(--shell-color) 40%, var(--shell-dark) 100%);
-  border-radius: 63% 63% 50% 50% / 75% 75% 45% 45%;
-  box-shadow: inset -3px -5px 10px rgba(0,0,0,0.6), inset 3px 3px 5px rgba(255,255,255,0.1), 0 10px 12px rgba(0,0,0,0.4);
-  position: relative;
-  transform-origin: bottom center;
-  transition: transform 0.4s ease;
-}
-
-.walnut-shell::after {
-  content: '';
-  position: absolute;
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 92%;
-  background: rgba(43, 18, 2, 0.7);
-  box-shadow: 
-    -12px 2px 2px rgba(0,0,0,0.2), 
-    12px 2px 2px rgba(0,0,0,0.2),
-    -22px 6px 3px rgba(0,0,0,0.3), 
-    22px 6px 3px rgba(0,0,0,0.3);
-  border-radius: 50%;
-}
-
-.shell-wrapper.lifted .walnut-shell {
-  transform: translateY(-55px) rotate(-10deg);
-}
-
-.ball {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  background: radial-gradient(circle at 30% 30%, #ff4757, #ff6b81, #ff1f3a);
-  border-radius: 50%;
-  bottom: 15px;
-  transform: translateX(-50%);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-  z-index: 3;
-  transition: left 0s ease;
-  display: none;
-}
-
-/* Interactive Start Button with Hover Glow Transitions (Saves Animation Rubric requirements) */
-#start-btn {
-  padding: 12px 35px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: white;
-  background: #2ecc71;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  box-shadow: 0 5px 0 #27ae60;
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 10;
-}
-#start-btn:hover:not(:disabled) {
-  transform: scale(1.05);
-  box-shadow: 0 5px 0 #27ae60, 0 0 15px rgba(46, 204, 113, 0.6);
-}
-#start-btn:active {
-  transform: translateY(4px);
-  box-shadow: 0 1px 0 #27ae60;
-}
-#start-btn:disabled {
-  background: #7f8c8d;
-  box-shadow: 0 5px 0 #95a5a6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Popups */
-.feedback-popup {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  background: rgba(0, 0, 0, 0.92);
-  padding: 25px 40px;
-  border-radius: 15px;
-  text-align: center;
-  z-index: 30;
-  pointer-events: none;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  border: 2px solid #f1c40f;
-  min-width: 280px;
-}
-.feedback-popup.show {
-  transform: translate(-50%, -50%) scale(1);
-}
-#feedback-emoji {
-  font-size: 3.8rem;
-}
-#feedback-text {
-  font-size: 1.6rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.fx-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 25;
-  overflow: hidden;
-}
-
-/* Victory Gold Coin Shower */
-.coin {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: radial-gradient(circle at 30% 30%, #ffd700, #ffa500);
-  border-radius: 50%;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3), inset 0 0 4px rgba(255,255,255,0.6);
-  top: -30px;
-  animation: fall linear forwards;
-}
-@keyframes fall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(650px) rotate(360deg); opacity: 0; }
-}
-
-/* Loss Flying Tomato Splat Animation */
-.tomato-splat {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  background: radial-gradient(circle, #ff2a2a 40%, #cc0000 80%);
-  border-radius: 40% 50% 35% 45% / 50% 40% 55% 35%;
-  filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
-  transform: translate(-50%, -50%) scale(0);
-  animation: splatIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards;
-}
-.tomato-splat::before, .tomato-splat::after {
-  content: '';
-  position: absolute;
-  background: #cc0000;
-  border-radius: 50%;
-}
-.tomato-splat::before { width: 15px; height: 25px; top: 25px; left: 10px; transform: rotate(-15deg); }
-.tomato-splat::after { width: 20px; height: 15px; top: 5px; left: 30px; }
-@keyframes splatIn {
-  0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0.8; }
-  100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.9; }
-}
+  <script src="script.js"></script>
+</body>
+</html>
 <script src="script.js"></script>
